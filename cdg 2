@@ -1,0 +1,93 @@
+#include <stdio.h>
+#include <string.h>
+
+#define MAX_ALUNOS 5
+#define MAX_DISCIPLINAS 4
+
+
+    typedef struct {
+    char nome[50];
+    int matricula;
+    char dataNascimento[11]; 
+    float notas[MAX_DISCIPLINAS];
+} Aluno;
+
+
+    float calcularMedia(float notas[], int numDisciplinas) {
+    float soma = 0.0;
+    for (int i = 0; i < numDisciplinas; i++) {
+        soma += notas[i];
+    }
+    return soma / numDisciplinas;
+}
+
+
+    void verificarAprovacao(float media) {
+    if (media >= 7.0) {
+        printf("Status: Aprovado\n");
+    } else {
+        printf("Status: Reprovado\n");
+    }
+}
+
+
+    void inserirDadosAluno(Aluno *aluno) {
+    printf("Digite o nome do aluno: ");
+    fgets(aluno->nome, sizeof(aluno->nome), stdin);
+    aluno->nome[strcspn(aluno->nome, "\n")] = '\0'; 
+    printf("Digite a matrícula do aluno: ");
+    scanf("%d", &aluno->matricula);
+    getchar(); 
+    printf("Digite a data de nascimento (DD/MM/AAAA): ");
+    fgets(aluno->dataNascimento, sizeof(aluno->dataNascimento), stdin);
+    aluno->dataNascimento[strcspn(aluno->dataNascimento, "\n")] = '\0';
+    printf("Digite as notas do aluno nas 4 disciplinas:\n");
+    for (int i = 0; i < MAX_DISCIPLINAS; i++) {
+        printf("Nota %d: ", i + 1);
+        scanf("%f", &aluno->notas[i]);
+    }
+    getchar(); 
+}
+
+
+    void exibirDadosAluno(Aluno aluno) {
+    printf("\nNome: %s\n", aluno.nome);
+    printf("Matrícula: %d\n", aluno.matricula);
+    printf("Data de nascimento: %s\n", aluno.dataNascimento);
+    printf("Notas:\n");
+    for (int i = 0; i < MAX_DISCIPLINAS; i++) {
+        printf("  Disciplina %d: %.2f\n", i + 1, aluno.notas[i]);
+    }
+    float media = calcularMedia(aluno.notas, MAX_DISCIPLINAS);
+    printf("Média geral: %.2f\n", media);
+    verificarAprovacao(media);
+}
+
+    int main() {
+    Aluno alunos[MAX_ALUNOS];
+    int numAlunos;
+
+    printf("Digite o número de alunos (máximo %d): ", MAX_ALUNOS);
+    scanf("%d", &numAlunos);
+    getchar(); 
+
+    if (numAlunos < 1 || numAlunos > MAX_ALUNOS) {
+        printf("Número inválido de alunos. Encerrando o programa.\n");
+        return 1;
+    }
+
+    
+    for (int i = 0; i < numAlunos; i++) {
+        printf("\n=== Inserindo dados do aluno %d ===\n", i + 1);
+        inserirDadosAluno(&alunos[i]);
+    }
+
+    
+    printf("\n=== Dados dos alunos ===\n");
+    for (int i = 0; i < numAlunos; i++) {
+        printf("\n--- Aluno %d ---\n", i + 1);
+        exibirDadosAluno(alunos[i]);
+    }
+
+    return 0;
+}
